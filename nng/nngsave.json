@@ -200,7 +200,7 @@
     {
       "lean": "lemma maze (P Q R S T U: Prop)\n(p : P)\n(h : P → Q)\n(i : Q → R)\n(j : Q → T)\n(k : S → T)\n(l : T → U)\n: U :=\n",
       "isSolved": true,
-      "editorText": "apply l,\r\napply j,\r\napply h,\r\nexact p,"
+      "editorText": "exact l(j(h(p))),"
     },
     {
       "lean": "example (P Q : Prop) : P → (Q → P) :=\n",
@@ -250,7 +250,7 @@
     {
       "lean": "lemma iff_trans (P Q R : Prop) : (P ↔ Q) → (Q ↔ R) → (P ↔ R) :=\n",
       "isSolved": true,
-      "editorText": "intro h,\r\nrw h,\r\nintro h2,\r\nexact h2,"
+      "editorText": "intro h,\r\ncases h with hpq hqp,\r\nintro h2,\r\ncases h2 with hqr hrq,\r\nsplit,\r\nintro p,\r\napply hqr,\r\napply hpq,\r\nexact p,\r\nintro r,\r\napply hqp,\r\napply hrq,\r\nexact r,"
     },
     {
       "lean": "example (P Q : Prop) : Q → (P ∨ Q) :=\n",
@@ -279,55 +279,68 @@
     },
     {
       "lean": "theorem succ_inj' {a b : mynat} (hs : succ(a) = succ(b)) :  a = b := \n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "apply succ_inj,\r\nexact hs,"
     },
     {
       "lean": "theorem succ_succ_inj {a b : mynat} (h : succ(succ(a)) = succ(succ(b))) :  a = b := \n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "apply succ_inj,\r\napply succ_inj,\r\nexact h,\r\n"
     },
     {
       "lean": "theorem succ_eq_succ_of_eq {a b : mynat} : a = b → succ(a) = succ(b) :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro h,\r\nrwa h,\r\n"
     },
     {
       "lean": "theorem succ_eq_succ_iff (a b : mynat) : succ a = succ b ↔ a = b :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "split,\r\nexact succ_inj,\r\nexact succ_eq_succ_of_eq,\r\n"
     },
     {
       "lean": "theorem add_right_cancel (a t b : mynat) : a + t = b + t → a = b :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro h,\r\ninduction t with k hi,\r\nrepeat{rw add_zero at h},\r\nexact h,\r\nrw add_succ at h,\r\nrw add_succ at h,\r\nhave innerh := succ_inj(h),\r\nexact hi(innerh),"
     },
     {
       "lean": "theorem add_left_cancel (t a b : mynat) : t + a = t + b → a = b :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro h,\r\nrw add_comm at h, rw add_comm t at h,\r\nhave q := add_right_cancel a t b,\r\nexact q(h),\r\n"
     },
     {
       "lean": "theorem add_right_cancel_iff (t a b : mynat) :  a + t = b + t ↔ a = b :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "split,\r\nexact add_right_cancel a t b,\r\nintro h,\r\nrwa h,"
     },
     {
       "lean": "lemma eq_zero_of_add_right_eq_self {a b : mynat} : a + b = a → b = 0 :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro h,\r\ninduction a with k hi,\r\nrwa zero_add at h,\r\nrw succ_add at h,\r\napply hi,\r\nexact succ_inj(h),\r\n"
     },
     {
       "lean": "theorem succ_ne_zero (a : mynat) : succ a ≠ 0 := \n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "symmetry,\r\nexact zero_ne_succ a,"
     },
     {
       "lean": "lemma add_left_eq_zero {{a b : mynat}} (H : a + b = 0) : b = 0 :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "cases b with d,\r\nrefl,\r\nrw add_succ at H,\r\nhave c := succ_ne_zero (a+d),\r\nexfalso,\r\nexact c(H),"
     },
     {
       "lean": "lemma add_right_eq_zero {a b : mynat} : a + b = 0 → a = 0 :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro h,\r\nrw add_comm at h,\r\nexact add_left_eq_zero(h),\r\n"
     },
     {
       "lean": "theorem add_one_eq_succ (d : mynat) : d + 1 = succ d :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "rwa succ_eq_add_one,\r\n"
     },
     {
       "lean": "lemma ne_succ_self (n : mynat) : n ≠ succ n :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro h,\r\nrw succ_eq_add_one at h,\r\nrw ← add_zero n at h,\r\nrw add_assoc at h,\r\nrw zero_add at h,\r\nhave hn := add_left_cancel n 0 1,\r\nhave z_eq_one := hn(h),\r\nrw ← zero_add 1 at z_eq_one,\r\nrw add_one_eq_succ at z_eq_one,\r\nexact zero_ne_succ 0 (z_eq_one),"
     },
     {
       "lean": "theorem mul_pos (a b : mynat) : a ≠ 0 → b ≠ 0 → a * b ≠ 0 :=\n",
