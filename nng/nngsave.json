@@ -344,19 +344,23 @@
     },
     {
       "lean": "theorem mul_pos (a b : mynat) : a ≠ 0 → b ≠ 0 → a * b ≠ 0 :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intros ha hb,\r\nintro hab,\r\ncases b with k,\r\napply hb,\r\nrefl,\r\nrw mul_succ at hab,\r\nhave h := add_left_eq_zero hab,\r\nexact ha(h),"
     },
     {
       "lean": "theorem eq_zero_or_eq_zero_of_mul_eq_zero (a b : mynat) (h : a * b = 0) :\n  a = 0 ∨ b = 0 :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "cases b with k,\r\nrw mul_zero at h,\r\nright,\r\nrefl,\r\nrw mul_succ at h,\r\nhave a0 := add_left_eq_zero h,\r\nleft,\r\nexact a0,"
     },
     {
       "lean": "theorem mul_eq_zero_iff (a b : mynat): a * b = 0 ↔ a = 0 ∨ b = 0 :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "split,\r\nexact eq_zero_or_eq_zero_of_mul_eq_zero a b,\r\nintro h,\r\ncases h,\r\nrw h,\r\nrwa zero_mul,\r\nrw h,\r\nrwa mul_zero,\r\n"
     },
     {
       "lean": "theorem mul_left_cancel (a b c : mynat) (ha : a ≠ 0) : a * b = a * c → b = c :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "induction c with d hd generalizing b,\r\nintro h,\r\nrw mul_zero at h,\r\nrw mul_eq_zero_iff at h,\r\ncases h,\r\nexfalso,\r\nexact ha(h),\r\nexact h,\r\nintro h,\r\ncases b,\r\nrw mul_zero at h,\r\nsymmetry at h,\r\nrw mul_eq_zero_iff at h,\r\ncases h,\r\nexfalso,\r\nexact ha(h),\r\nsymmetry,\r\nexact h,\r\nrw mul_succ at h, rw mul_succ at h,\r\nrw add_right_cancel_iff at h,\r\nhave hbd := hd(b),\r\napply succ_eq_succ_of_eq,\r\nexact hbd(h),\r\n"
     },
     {
       "lean": "lemma one_add_le_self (x : mynat) : x ≤ 1 + x :=\n",
