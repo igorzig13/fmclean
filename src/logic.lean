@@ -9,38 +9,49 @@ variables P Q R : Prop
 ------------------------------------------------
 
 theorem doubleneg_intro :
-  P → ¬¬P  :=
-begin
-  sorry,
-end
+  P → ¬¬P  := by
+  intro p
+  intro np
+  exact np p
 
 theorem doubleneg_elim :
-  ¬¬P → P  :=
-begin
-  sorry,
-end
+  ¬¬P → P  := by
+  intro nnp
+  by_cases p : P
+  exact p
+  apply False.elim
+  exact nnp p 
+
 
 theorem doubleneg_law :
-  ¬¬P ↔ P  :=
-begin
-  sorry,
-end
+  ¬¬P ↔ P  := by
+  apply Iff.intro
+  exact doubleneg_elim
+  exact doubleneg_intro
 
 ------------------------------------------------
 -- Comutatividade dos ∨,∧:
 ------------------------------------------------
 
 theorem disj_comm :
-  (P ∨ Q) → (Q ∨ P)  :=
-begin
-  sorry,
-end
+  (P ∨ Q) → (Q ∨ P)  := by
+  intro h
+  apply Or.elim h
+  intro p
+  apply Or.inr
+  exact p
+  intro q
+  apply Or.inl
+  exact q
 
 theorem conj_comm :
-  (P ∧ Q) → (Q ∧ P)  :=
-begin
-  sorry,
-end
+  (P ∧ Q) → (Q ∧ P)  := by
+  intro peq
+  apply And.intro
+  exact peq.right
+  exact peq.left
+  
+
 
 
 ------------------------------------------------
@@ -48,16 +59,26 @@ end
 ------------------------------------------------
 
 theorem impl_as_disj_converse :
-  (¬P ∨ Q) → (P → Q)  :=
-begin
-  sorry,
-end
+  (¬P ∨ Q) → (P → Q)  := by
+  intro h
+  intro p
+  apply h.elim
+  intro np
+  apply False.elim
+  exact np p
+  intro q
+  exact q
 
 theorem disj_as_impl :
-  (P ∨ Q) → (¬P → Q)  :=
-begin
-  sorry,
-end
+  (P ∨ Q) → (¬P → Q)  := by
+  intro h
+  intro np
+  apply h.elim
+  intro p
+  apply False.elim
+  exact np p 
+  intro q
+  exact q
 
 
 ------------------------------------------------
