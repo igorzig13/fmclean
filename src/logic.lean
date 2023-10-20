@@ -1,7 +1,7 @@
 
 section propositional
 
-variables P Q R : Prop
+variable (P Q R : Prop)
 
 
 ------------------------------------------------
@@ -26,8 +26,10 @@ theorem doubleneg_elim :
 theorem doubleneg_law :
   ¬¬P ↔ P  := by
   apply Iff.intro
-  exact doubleneg_elim
-  exact doubleneg_intro
+  intro nnp
+  exact doubleneg_elim P nnp
+  intro p
+  exact doubleneg_intro P p
 
 ------------------------------------------------
 -- Comutatividade dos ∨,∧:
@@ -106,8 +108,10 @@ theorem impl_as_contrapositive_converse :
 theorem contrapositive_law :
   (P → Q) ↔ (¬Q → ¬P)  := by
   apply Iff.intro
-  exact impl_as_contrapositive
-  exact impl_as_contrapositive_converse
+  intro pq
+  exact impl_as_contrapositive P Q pq
+  intro nqnp
+  exact impl_as_contrapositive_converse P Q nqnp
 
 
 ------------------------------------------------
@@ -131,10 +135,15 @@ theorem lem_irrefutable :
 ------------------------------------------------
 
 theorem peirce_law_weak :
-  ((P → Q) → P) → ¬¬P  :=
-begin
-  sorry,
-end
+  ((P → Q) → P) → ¬¬P  := by
+  intro h
+  intro np
+  have h' : (P → Q) := by
+    intro p
+    apply False.elim
+    exact np p
+  have p := h h'
+  exact np p
 
 
 ------------------------------------------------
