@@ -86,22 +86,28 @@ theorem disj_as_impl :
 ------------------------------------------------
 
 theorem impl_as_contrapositive :
-  (P → Q) → (¬Q → ¬P)  :=
-begin
-  sorry,
-end
+  (P → Q) → (¬Q → ¬P)  := by
+  intro h
+  intro nq
+  intro p
+  have q := h p 
+  exact nq q
 
 theorem impl_as_contrapositive_converse :
-  (¬Q → ¬P) → (P → Q)  :=
-begin
-  sorry,
-end
+  (¬Q → ¬P) → (P → Q)  := by
+  intro h
+  intro p
+  by_cases q : Q
+  exact q
+  apply False.elim
+  have np := h q
+  exact np p
 
 theorem contrapositive_law :
-  (P → Q) ↔ (¬Q → ¬P)  :=
-begin
-  sorry,
-end
+  (P → Q) ↔ (¬Q → ¬P)  := by
+  apply Iff.intro
+  exact impl_as_contrapositive
+  exact impl_as_contrapositive_converse
 
 
 ------------------------------------------------
@@ -109,12 +115,17 @@ end
 ------------------------------------------------
 
 theorem lem_irrefutable :
-  ¬¬(P∨¬P)  :=
-begin
-  sorry,
-end
-
-
+  ¬¬(P∨¬P)  := by 
+  intro h
+  have h' : (P∨¬P) := by
+    apply Or.inr
+    intro p 
+    have h'' : (P∨¬P) := by
+      apply Or.inl
+      exact p
+    exact h h''
+  exact h h'
+  
 ------------------------------------------------
 -- A lei de Peirce
 ------------------------------------------------
