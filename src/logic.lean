@@ -151,17 +151,28 @@ theorem peirce_law_weak :
 ------------------------------------------------
 
 theorem disj_as_negconj :
-  P∨Q → ¬(¬P∧¬Q)  :=
-begin
-  sorry,
-end
+  P∨Q → ¬(¬P∧¬Q)  := by
+  intro porq
+  intro h 
+  have np := h.left
+  have nq := h.right
+  apply porq.elim
+  intro p
+  exact np p
+  intro q
+  exact nq q
 
 theorem conj_as_negdisj :
-  P∧Q → ¬(¬P∨¬Q)  :=
-begin
-  sorry,
-end
-
+  P∧Q → ¬(¬P∨¬Q)  := by
+  intro peq
+  intro npounq
+  have p := peq.left
+  have q:= peq.right
+  apply npounq.elim
+  intro np
+  exact np p
+  intro nq
+  exact nq q
 
 ------------------------------------------------
 -- As leis de De Morgan para ∨,∧:
