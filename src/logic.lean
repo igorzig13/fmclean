@@ -179,68 +179,137 @@ theorem conj_as_negdisj :
 ------------------------------------------------
 
 theorem demorgan_disj :
-  ¬(P∨Q) → (¬P ∧ ¬Q)  :=
-begin
-  sorry,
-end
+  ¬(P∨Q) → (¬P ∧ ¬Q)  := by
+  intro npouq
+  apply And.intro
+  intro p 
+  have pouq : (P∨Q) := by
+    apply Or.inl
+    exact p 
+  exact npouq pouq
+  intro q 
+  have pouq : (P∨Q) := by
+    apply Or.inr
+    exact q 
+  exact npouq pouq
 
 theorem demorgan_disj_converse :
-  (¬P ∧ ¬Q) → ¬(P∨Q)  :=
-begin
-  sorry,
-end
+  (¬P ∧ ¬Q) → ¬(P∨Q)  := by
+  intro npenq
+  intro pouq
+  have np := npenq.left
+  have nq := npenq.right
+  apply pouq.elim
+  exact np
+  exact nq
 
-theorem demorgan_conj :
-  ¬(P∧Q) → (¬Q ∨ ¬P)  :=
-begin
-  sorry,
-end
+theorem demorgan_conj : -- com lem
+  ¬(P∧Q) → (¬Q ∨ ¬P)  := by
+  intro npeq
+  by_cases p : P
+  by_cases q : Q
+  have  peq : (P ∧ Q) := by
+    apply And.intro
+    exact p
+    exact q 
+  apply False.elim
+  exact npeq peq
+  exact Or.inl q 
+  exact Or.inr p
+
 
 theorem demorgan_conj_converse :
-  (¬Q ∨ ¬P) → ¬(P∧Q)  :=
-begin
-  sorry,
-end
+  (¬Q ∨ ¬P) → ¬(P∧Q)  := by
+  intro nqounp
+  intro peq
+  apply nqounp.elim
+  have q := peq.right
+  intro nq
+  exact nq q
+  have p := peq.left
+  intro np
+  exact np p
 
 theorem demorgan_conj_law :
-  ¬(P∧Q) ↔ (¬Q ∨ ¬P)  :=
-begin
-  sorry,
-end
+  ¬(P∧Q) ↔ (¬Q ∨ ¬P)  := by
+  apply Iff.intro
+  exact demorgan_conj P Q
+  exact demorgan_conj_converse P Q
 
 theorem demorgan_disj_law :
-  ¬(P∨Q) ↔ (¬P ∧ ¬Q)  :=
-begin
-  sorry,
-end
+  ¬(P∨Q) ↔ (¬P ∧ ¬Q)  := by
+  apply Iff.intro
+  exact demorgan_disj P Q
+  exact demorgan_disj_converse P Q
 
 ------------------------------------------------
 -- Proposições de distributividade dos ∨,∧:
 ------------------------------------------------
 
 theorem distr_conj_disj :
-  P∧(Q∨R) → (P∧Q)∨(P∧R)  :=
-begin
-  sorry,
-end
+  P∧(Q∨R) → (P∧Q)∨(P∧R)  := by
+  intro h
+  have p := h.left
+  have qour := h.right 
+  apply qour.elim
+  intro q 
+  apply Or.inl
+  apply And.intro
+  exact p
+  exact q 
+  intro r
+  apply Or.inr
+  apply And.intro
+  exact p
+  exact r
 
 theorem distr_conj_disj_converse :
-  (P∧Q)∨(P∧R) → P∧(Q∨R)  :=
-begin
-  sorry,
-end
+  (P∧Q)∨(P∧R) → P∧(Q∨R)  := by
+  intro h
+  apply h.elim
+  intro peq
+  apply And.intro
+  exact peq.left
+  apply Or.inl
+  exact peq.right
+  intro per
+  apply And.intro
+  exact per.left
+  apply Or.inr
+  exact per.right
 
 theorem distr_disj_conj :
-  P∨(Q∧R) → (P∨Q)∧(P∨R)  :=
-begin
-  sorry,
-end
+  P∨(Q∧R) → (P∨Q)∧(P∨R)  := by
+  intro h
+  apply And.intro
+  apply h.elim
+  intro p
+  exact Or.inl p
+  intro qer
+  exact Or.inr qer.left
+  apply h.elim
+  intro p
+  exact Or.inl p
+  intro qer
+  exact Or.inr qer.right
 
 theorem distr_disj_conj_converse :
-  (P∨Q)∧(P∨R) → P∨(Q∧R)  :=
-begin
-  sorry,
-end
+  (P∨Q)∧(P∨R) → P∨(Q∧R)  := by
+  intro h
+  have pouq := h.left
+  apply pouq.elim
+  intro p
+  exact Or.inl p
+  intro q
+  have pour := h.right
+  apply pour.elim
+  intro p
+  exact Or.inl p
+  intro r
+  apply Or.inr
+  apply And.intro
+  exact q
+  exact r
 
 
 ------------------------------------------------
@@ -318,8 +387,8 @@ end propositional
 
 section predicate
 
-variable U : Type
-variables P Q : U -> Prop
+variable (U : Type)
+variable (P Q : U -> Prop)
 
 
 ------------------------------------------------
