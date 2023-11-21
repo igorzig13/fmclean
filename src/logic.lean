@@ -20,7 +20,7 @@ theorem doubleneg_elim :
   by_cases p : P
   exact p
   apply False.elim
-  exact nnp p 
+  exact nnp p
 
 
 theorem doubleneg_law :
@@ -52,7 +52,7 @@ theorem conj_comm :
   apply And.intro
   exact peq.right
   exact peq.left
-  
+
 
 
 
@@ -78,7 +78,7 @@ theorem disj_as_impl :
   apply h.elim
   intro p
   apply False.elim
-  exact np p 
+  exact np p
   intro q
   exact q
 
@@ -92,7 +92,7 @@ theorem impl_as_contrapositive :
   intro h
   intro nq
   intro p
-  have q := h p 
+  have q := h p
   exact nq q
 
 theorem impl_as_contrapositive_converse :
@@ -119,17 +119,17 @@ theorem contrapositive_law :
 ------------------------------------------------
 
 theorem lem_irrefutable :
-  ¬¬(P∨¬P)  := by 
+  ¬¬(P∨¬P)  := by
   intro h
   have h' : (P∨¬P) := by
     apply Or.inr
-    intro p 
+    intro p
     have h'' : (P∨¬P) := by
       apply Or.inl
       exact p
     exact h h''
   exact h h'
-  
+
 ------------------------------------------------
 -- A lei de Peirce
 ------------------------------------------------
@@ -153,7 +153,7 @@ theorem peirce_law_weak :
 theorem disj_as_negconj :
   P∨Q → ¬(¬P∧¬Q)  := by
   intro porq
-  intro h 
+  intro h
   have np := h.left
   have nq := h.right
   apply porq.elim
@@ -182,15 +182,15 @@ theorem demorgan_disj :
   ¬(P∨Q) → (¬P ∧ ¬Q)  := by
   intro npouq
   apply And.intro
-  intro p 
+  intro p
   have pouq : (P∨Q) := by
     apply Or.inl
-    exact p 
+    exact p
   exact npouq pouq
-  intro q 
+  intro q
   have pouq : (P∨Q) := by
     apply Or.inr
-    exact q 
+    exact q
   exact npouq pouq
 
 theorem demorgan_disj_converse :
@@ -211,10 +211,10 @@ theorem demorgan_conj : -- com lem
   have  peq : (P ∧ Q) := by
     apply And.intro
     exact p
-    exact q 
+    exact q
   apply False.elim
   exact npeq peq
-  exact Or.inl q 
+  exact Or.inl q
   exact Or.inr p
 
 
@@ -250,13 +250,13 @@ theorem distr_conj_disj :
   P∧(Q∨R) → (P∧Q)∨(P∧R)  := by
   intro h
   have p := h.left
-  have qour := h.right 
+  have qour := h.right
   apply qour.elim
-  intro q 
+  intro q
   apply Or.inl
   apply And.intro
   exact p
-  exact q 
+  exact q
   intro r
   apply Or.inr
   apply And.intro
@@ -317,67 +317,75 @@ theorem distr_disj_conj_converse :
 ------------------------------------------------
 
 theorem curry_prop :
-  ((P∧Q)→R) → (P→(Q→R))  :=
-begin
-  sorry,
-end
+  ((P∧Q)→R) → (P→(Q→R))  := by
+  intro h
+  intro p
+  intro q
+  have peq : (P ∧ Q) := by
+    apply And.intro
+    exact p
+    exact q
+  exact h peq
 
 theorem uncurry_prop :
-  (P→(Q→R)) → ((P∧Q)→R)  :=
-begin
-  sorry,
-end
-
+  (P→(Q→R)) → ((P∧Q)→R)  := by
+  intro h
+  intro peq
+  exact h peq.left peq.right
 
 ------------------------------------------------
 -- Reflexividade da →:
 ------------------------------------------------
 
 theorem impl_refl :
-  P → P  :=
-begin
-  sorry,
-end
+  P → P  := by
+  intro p
+  exact p
 
 ------------------------------------------------
 -- Weakening and contraction:
 ------------------------------------------------
 
 theorem weaken_disj_right :
-  P → (P∨Q)  :=
-begin
-  sorry,
-end
+  P → (P∨Q)  := by
+  intro p
+  apply Or.inl
+  exact p
 
 theorem weaken_disj_left :
-  Q → (P∨Q)  :=
-begin
-  sorry,
-end
+  Q → (P∨Q)  := by
+  intro q
+  apply Or.inr
+  exact q
 
 theorem weaken_conj_right :
-  (P∧Q) → P  :=
-begin
-  sorry,
-end
+  (P∧Q) → P  := by
+  intro peq
+  exact peq.left
 
 theorem weaken_conj_left :
-  (P∧Q) → Q  :=
-begin
-  sorry,
-end
+  (P∧Q) → Q  := by
+  intro peq
+  exact peq.right
 
 theorem conj_idempot :
-  (P∧P) ↔ P :=
-begin
-  sorry,
-end
+  (P∧P) ↔ P := by
+  apply Iff.intro
+  intro pep
+  exact pep.left
+  intro p
+  apply And.intro
+  exact p
+  exact p
 
 theorem disj_idempot :
-  (P∨P) ↔ P  :=
-begin
-  sorry,
-end
+  (P∨P) ↔ P  := by
+  apply Iff.intro
+  intro poup
+  apply poup.elim
+  exact impl_refl P
+  exact impl_refl P
+  exact weaken_disj_right P P
 
 end propositional
 
