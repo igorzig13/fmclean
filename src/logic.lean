@@ -404,81 +404,111 @@ variable (P Q : U -> Prop)
 ------------------------------------------------
 
 theorem demorgan_exists :
-  ¬(∃x, P x) → (∀x, ¬P x)  :=
-begin
-  sorry,
-end
+  ¬(∃x, P x) → (∀x, ¬P x)  := by
+  intro h
+  intro x
+  intro px
+  apply h
+  exact Exists.intro x px
 
 theorem demorgan_exists_converse :
-  (∀x, ¬P x) → ¬(∃x, P x)  :=
-begin
-  sorry,
-end
+  (∀x, ¬P x) → ¬(∃x, P x)  := by
+  intro h
+  intro ex
+  apply Exists.elim ex
+  intro a
+  intro pa
+  have npa := h a
+  exact npa pa
 
 theorem demorgan_forall :
-  ¬(∀x, P x) → (∃x, ¬P x)  :=
-begin
-  sorry,
-end
+  ¬(∀x, P x) → (∃x, ¬P x)  := by
+  intro h
+  apply Classical.byContradiction
+  intro nex
+  apply h
+  intro x
+  by_cases px : P x
+  exact px
+  apply False.elim
+  apply nex
+  exact Exists.intro x px
 
 theorem demorgan_forall_converse :
-  (∃x, ¬P x) → ¬(∀x, P x)  :=
-begin
-  sorry,
-end
+  (∃x, ¬P x) → ¬(∀x, P x)  := by
+  intro he
+  intro hfa
+  apply Exists.elim he
+  intro a npa
+  have pa := hfa a
+  exact npa pa
 
 theorem demorgan_forall_law :
-  ¬(∀x, P x) ↔ (∃x, ¬P x)  :=
-begin
-  sorry,
-end
+  ¬(∀x, P x) ↔ (∃x, ¬P x)  := by
+  apply Iff.intro
+  exact demorgan_forall U P
+  exact demorgan_forall_converse U P
 
 theorem demorgan_exists_law :
-  ¬(∃x, P x) ↔ (∀x, ¬P x)  :=
-begin
-  sorry,
-end
-
+  ¬(∃x, P x) ↔ (∀x, ¬P x)  := by
+  apply Iff.intro
+  exact demorgan_exists U P
+  exact demorgan_exists_converse U P
 
 ------------------------------------------------
 -- Proposições de interdefinabilidade dos ∃,∀:
 ------------------------------------------------
 
 theorem exists_as_neg_forall :
-  (∃x, P x) → ¬(∀x, ¬P x)  :=
-begin
-  sorry,
-end
+  (∃x, P x) → ¬(∀x, ¬P x)  := by
+  intro he
+  intro hfa
+  apply Exists.elim he
+  intro a pa
+  have npa := hfa a
+  exact npa pa
 
 theorem forall_as_neg_exists :
-  (∀x, P x) → ¬(∃x, ¬P x)  :=
-begin
-  sorry,
-end
+  (∀x, P x) → ¬(∃x, ¬P x)  := by
+  intro hfa
+  intro he
+  apply Exists.elim he
+  intro a npa
+  have pa := hfa a
+  exact npa pa
 
 theorem forall_as_neg_exists_converse :
-  ¬(∃x, ¬P x) → (∀x, P x)  :=
-begin
-  sorry,
-end
+  ¬(∃x, ¬P x) → (∀x, P x)  := by
+  intro nhe
+  intro x
+  by_cases px : P x
+  exact px
+  apply False.elim
+  apply nhe
+  exact Exists.intro x px
 
 theorem exists_as_neg_forall_converse :
-  ¬(∀x, ¬P x) → (∃x, P x)  :=
-begin
-  sorry,
-end
+  ¬(∀x, ¬P x) → (∃x, P x)  := by
+  intro hnfa
+  apply Classical.byContradiction
+  intro nhe
+  apply hnfa
+  intro x
+  intro px
+  apply nhe
+  exact Exists.intro x px
 
 theorem forall_as_neg_exists_law :
-  (∀x, P x) ↔ ¬(∃x, ¬P x)  :=
-begin
-  sorry,
-end
+  (∀x, P x) ↔ ¬(∃x, ¬P x)  := by
+  apply Iff.intro
+  exact forall_as_neg_exists U P
+  exact forall_as_neg_exists_converse U P
 
 theorem exists_as_neg_forall_law :
-  (∃x, P x) ↔ ¬(∀x, ¬P x)  :=
-begin
-  sorry,
-end
+  (∃x, P x) ↔ ¬(∀x, ¬P x)  := by
+  apply Iff.intro
+  exact exists_as_neg_forall U P
+  exact exists_as_neg_forall_converse U P
 
 
 ------------------------------------------------
@@ -486,42 +516,75 @@ end
 ------------------------------------------------
 
 theorem exists_conj_as_conj_exists :
-  (∃x, P x ∧ Q x) → (∃x, P x) ∧ (∃x, Q x)  :=
-begin
-  sorry,
-end
+  (∃x, P x ∧ Q x) → (∃x, P x) ∧ (∃x, Q x)  := by
+  intro he
+  apply Exists.elim he
+  intro x pxeqx
+  apply And.intro
+  exact Exists.intro x pxeqx.left
+  exact Exists.intro x pxeqx.right
 
 theorem exists_disj_as_disj_exists :
-  (∃x, P x ∨ Q x) → (∃x, P x) ∨ (∃x, Q x)  :=
-begin
-  sorry,
-end
+  (∃x, P x ∨ Q x) → (∃x, P x) ∨ (∃x, Q x)  := by
+  intro he
+  apply Exists.elim he
+  intro x pxouqx
+  apply pxouqx.elim
+  intro px
+  apply Or.inl
+  exact Exists.intro x px
+  intro qx
+  apply Or.inr
+  exact Exists.intro x qx
 
 theorem exists_disj_as_disj_exists_converse :
-  (∃x, P x) ∨ (∃x, Q x) → (∃x, P x ∨ Q x)  :=
-begin
-  sorry,
-end
+  (∃x, P x) ∨ (∃x, Q x) → (∃x, P x ∨ Q x)  := by
+  intro hde
+  apply hde.elim
+  intro hep
+  apply Exists.elim hep
+  intro x px
+  apply Exists.intro x
+  apply Or.inl
+  exact px
+  intro heq
+  apply Exists.elim heq
+  intro x qx
+  apply Exists.intro x
+  apply Or.inr
+  exact qx
 
 theorem forall_conj_as_conj_forall :
-  (∀x, P x ∧ Q x) → (∀x, P x) ∧ (∀x, Q x)  :=
-begin
-  sorry,
-end
+  (∀x, P x ∧ Q x) → (∀x, P x) ∧ (∀x, Q x)  := by
+  intro hfa
+  apply And.intro
+  intro x
+  have pxeqx := hfa x
+  exact pxeqx.left
+  intro x
+  have pxeqx := hfa x
+  exact pxeqx.right
 
 theorem forall_conj_as_conj_forall_converse :
-  (∀x, P x) ∧ (∀x, Q x) → (∀x, P x ∧ Q x)  :=
-begin
-  sorry,
-end
-
+  (∀x, P x) ∧ (∀x, Q x) → (∀x, P x ∧ Q x)  := by
+  intro h
+  intro x
+  apply And.intro
+  exact h.left x
+  exact h.right x
 
 theorem forall_disj_as_disj_forall_converse :
-  (∀x, P x) ∨ (∀x, Q x) → (∀x, P x ∨ Q x)  :=
-begin
-  sorry,
-end
-
+  (∀x, P x) ∨ (∀x, Q x) → (∀x, P x ∨ Q x)  := by
+  intro h
+  apply h.elim
+  intro hpx
+  intro x
+  apply Or.inl
+  exact hpx x
+  intro hqx
+  intro x
+  apply Or.inr
+  exact hqx x
 
 /- NOT THEOREMS --------------------------------
 
